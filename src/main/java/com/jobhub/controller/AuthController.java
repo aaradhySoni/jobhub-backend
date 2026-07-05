@@ -4,7 +4,7 @@ import com.jobhub.dto.request.LoginRequestDTO;
 import com.jobhub.dto.request.RegistrationRequestDTO;
 import com.jobhub.dto.response.LoginResponseDTO;
 import com.jobhub.dto.response.RegistrationResponseDTO;
-import com.jobhub.service.UserService;
+import com.jobhub.service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

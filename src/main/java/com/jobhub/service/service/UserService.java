@@ -1,4 +1,4 @@
-package com.jobhub.service;
+package com.jobhub.service.service;
 
 import com.jobhub.dto.request.LoginRequestDTO;
 import com.jobhub.dto.request.RegistrationRequestDTO;

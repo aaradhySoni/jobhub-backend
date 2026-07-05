@@ -9,7 +9,7 @@ import com.jobhub.exception.EmailAlreadyExistsException;
 import com.jobhub.repository.UserRepository;
 import com.jobhub.security.CustomUserDetailsService;
 import com.jobhub.security.JwtService;
-import com.jobhub.service.UserService;
+import com.jobhub.service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
