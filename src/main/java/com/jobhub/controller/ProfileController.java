@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/profile")
@@ -43,6 +44,36 @@ public class ProfileController {
         return ResponseEntity.ok(
                 profileService.updateJobSeekerProfile(request));
     }
+    @PostMapping("/jobseeker/resume/upload")
+    public ResponseEntity<String> uploadResume(
+            @RequestParam("file") MultipartFile file) {
+
+        return ResponseEntity.ok(
+                profileService.uploadResume(file));
+    }
+    @DeleteMapping("/jobseeker/resume")
+    public ResponseEntity<String> deleteResume() {
+
+        profileService.deleteResume();
+
+        return ResponseEntity.ok(
+                "Resume deleted successfully.");
+    }
+    @PostMapping("/jobseeker/cover-letter/upload")
+    public ResponseEntity<String> uploadCoverLetter(
+            @RequestParam("file") MultipartFile file) {
+
+        return ResponseEntity.ok(
+                profileService.uploadCoverLetter(file));
+    }
+    @DeleteMapping("/jobseeker/cover-letter")
+    public ResponseEntity<String> deleteCoverLetter() {
+
+        profileService.deleteCoverLetter();
+
+        return ResponseEntity.ok(
+                "Cover Letter deleted successfully.");
+    }
 
     // ================= Recruiter =================
 
@@ -68,4 +99,6 @@ public class ProfileController {
         return ResponseEntity.ok(
                 profileService.updateRecruiterProfile(request));
     }
+
+
 }

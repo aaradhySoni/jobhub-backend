@@ -4,6 +4,7 @@ import com.jobhub.dto.request.JobSeekerProfileRequestDTO;
 import com.jobhub.dto.request.RecruiterProfileRequestDTO;
 import com.jobhub.dto.response.JobSeekerProfileResponseDTO;
 import com.jobhub.dto.response.RecruiterProfileResponseDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ProfileService {
 
@@ -18,4 +19,12 @@ public interface ProfileService {
     JobSeekerProfileResponseDTO updateJobSeekerProfile(JobSeekerProfileRequestDTO request);
 
     RecruiterProfileResponseDTO updateRecruiterProfile(RecruiterProfileRequestDTO request);
+
+    String uploadResume(MultipartFile file);
+
+    String uploadCoverLetter(MultipartFile file);
+
+    void deleteResume();
+
+    void deleteCoverLetter();
 }

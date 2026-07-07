@@ -19,6 +19,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
 @Service
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
@@ -162,5 +170,170 @@ public class ProfileServiceImpl implements ProfileService {
                 recruiterProfileRepository.save(profile);
 
         return recruiterProfileMapper.toResponse(updatedProfile);
+    }
+
+
+
+//resume and CV
+@Override
+public String uploadResume(MultipartFile file) {
+
+    return uploadDocument(
+            file,
+            "uploads/resumes",
+            "resume"
+    );
+}
+@Override
+public String uploadCoverLetter(MultipartFile file) {
+
+    return uploadDocument(
+            file,
+            "uploads/cover-letters",
+            "coverLetter"
+    );
+}
+    @Override
+    public void deleteResume() {
+
+        JobSeekerProfile profile = getLoggedInJobSeekerProfile();
+
+        deleteFile(profile.getResumeUrl());
+
+        profile.setResumeUrl(null);
+
+        jobSeekerProfileRepository.save(profile);
+    }
+    @Override
+    public void deleteCoverLetter() {
+
+        JobSeekerProfile profile = getLoggedInJobSeekerProfile();
+
+        deleteFile(profile.getCoverLetterUrl());
+
+        profile.setCoverLetterUrl(null);
+
+        jobSeekerProfileRepository.save(profile);
+    }
+//helper method for resume /CV
+private String uploadDocument(
+        MultipartFile file,
+        String uploadDirectory,
+        String documentType) {
+
+    if (file.isEmpty()) {
+        throw new RuntimeException(
+                "Please upload a PDF file.");
+    }
+
+    if (!"application/pdf".equals(file.getContentType())) {
+        throw new RuntimeException(
+                "Only PDF files are allowed.");
+    }
+
+    if (file.getSize() > 5 * 1024 * 1024) {
+        throw new RuntimeException(
+                "Maximum allowed file size is 5 MB.");
+    }
+
+    JobSeekerProfile profile =
+            getLoggedInJobSeekerProfile();
+
+
+    // Resume already exists
+    if ("resume".equals(documentType)
+            && profile.getResumeUrl() != null
+            && !profile.getResumeUrl().isBlank()) {
+
+        throw new RuntimeException(
+                "Resume already exists. Please delete the existing resume before uploading a new one.");
+    }
+
+// Cover Letter already exists
+    if ("coverLetter".equals(documentType)
+            && profile.getCoverLetterUrl() != null
+            && !profile.getCoverLetterUrl().isBlank()) {
+
+        throw new RuntimeException(
+                "Cover Letter already exists. Please delete the existing cover letter before uploading a new one.");
+    }
+
+    try {
+
+        Path uploadPath =
+                Paths.get(uploadDirectory);
+
+        if (!Files.exists(uploadPath)) {
+
+            Files.createDirectories(uploadPath);
+        }
+
+        String fileName =
+                System.currentTimeMillis()
+                        + "_"
+                        + file.getOriginalFilename();
+
+        Path filePath =
+                uploadPath.resolve(fileName);
+
+        Files.copy(
+                file.getInputStream(),
+                filePath,
+                StandardCopyOption.REPLACE_EXISTING
+        );
+
+        String relativePath =
+                uploadDirectory.replace("\\", "/")
+                        + "/"
+                        + fileName;
+
+        if ("resume".equals(documentType)) {
+
+            profile.setResumeUrl(relativePath);
+
+        } else {
+
+            profile.setCoverLetterUrl(relativePath);
+        }
+
+        jobSeekerProfileRepository.save(profile);
+
+        return documentType.equals("resume")
+                ? "Resume uploaded successfully."
+                : "Cover Letter uploaded successfully.";
+
+    } catch (Exception e) {
+
+        throw new RuntimeException(
+                "Failed to upload document.", e);
+    }
+}
+
+    private JobSeekerProfile getLoggedInJobSeekerProfile() {
+
+        User user = getLoggedInUser();
+
+        if (user.getRole() != Role.JOB_SEEKER) {
+            throw new RuntimeException(
+                    "Only job seekers can perform this operation.");
+        }
+
+        return jobSeekerProfileRepository.findByUser(user)
+                .orElseThrow(() ->
+                        new RuntimeException("Job seeker profile not found."));
+    }
+    private void deleteFile(String filePath) {
+        if (filePath == null || filePath.isBlank()) {
+            return;
+        }
+        try {
+            Path path = Paths.get(filePath);
+            Files.deleteIfExists(path);
+
+        }catch (Exception e) {
+            throw new RuntimeException(
+                    "Failed to delete file.",
+                    e);
+        }
     }
 }

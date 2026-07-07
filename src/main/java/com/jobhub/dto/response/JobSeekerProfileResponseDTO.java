@@ -28,11 +28,15 @@ public class JobSeekerProfileResponseDTO {
 
     private String profilePhotoUrl;
 
-    private String resumeUrl;
+//    private String resumeUrl;
 
     private String linkedinUrl;
 
     private String githubUrl;
 
     private String portfolioUrl;
+
+    private String resumeUrl;
+
+    private String coverLetterUrl;
 }

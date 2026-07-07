@@ -43,6 +43,8 @@ public class JobSeekerProfileMapper {
                 .linkedinUrl(profile.getLinkedinUrl())
                 .githubUrl(profile.getGithubUrl())
                 .portfolioUrl(profile.getPortfolioUrl())
+                .resumeUrl(profile.getResumeUrl())
+                .coverLetterUrl(profile.getCoverLetterUrl())
                 .build();
     }
 

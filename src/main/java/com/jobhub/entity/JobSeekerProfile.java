@@ -34,7 +34,6 @@ public class JobSeekerProfile {
 
     private String profilePhotoUrl;
 
-    private String resumeUrl;
 
     private String linkedinUrl;
 
@@ -45,6 +44,12 @@ public class JobSeekerProfile {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    @Column(name = "resume_url")
+    private String resumeUrl;
+
+    @Column(name = "cover_letter_url")
+    private String coverLetterUrl;
 
     @PrePersist
     public void onCreate() {
