@@ -34,10 +34,27 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(
                                 "/api/auth/register",
-                                         "/api/auth/login")
-                        .permitAll()
+                                "/api/auth/login"
+                        ).permitAll()
+
+                        // Public APIs
+
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.GET,
+                                "/api/jobs",
+                                "/api/jobs/*"
+                        ).permitAll()
+
+                        // Recruiter APIs
+
+                        .requestMatchers(
+                                "/api/jobs",
+                                "/api/jobs/my/**"
+                        ).hasRole("RECRUITER")
+
                         .anyRequest().authenticated()
                 )
                 //.httpBasic(Customizer.withDefaults());
