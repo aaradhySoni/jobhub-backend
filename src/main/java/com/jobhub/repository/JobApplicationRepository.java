@@ -3,10 +3,13 @@ package com.jobhub.repository;
 import com.jobhub.entity.Job;
 import com.jobhub.entity.JobApplication;
 import com.jobhub.entity.JobSeekerProfile;
+import com.jobhub.entity.RecruiterProfile;
+import com.jobhub.enums.ApplicationStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface JobApplicationRepository extends JpaRepository<JobApplication, Long> {
@@ -40,4 +43,16 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
             JobSeekerProfile jobSeekerProfile
     );
 
+//    ================= 4 aggregation queries for recruiter dashboard   =================
+
+    long countByJobRecruiterProfile(
+            RecruiterProfile recruiterProfile);
+
+    List<JobApplication> findByJobRecruiterProfileOrderByCreatedAtDesc(
+            RecruiterProfile recruiterProfile,
+            Pageable pageable);
+// ================= functions for job Seeker Dashboard
+    long countByJobSeekerProfile(JobSeekerProfile jobSeekerProfile);
+
+    long countByJobSeekerProfileAndStatus(JobSeekerProfile jobSeekerProfile, ApplicationStatus status);
 }

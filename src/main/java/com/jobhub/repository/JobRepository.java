@@ -1,6 +1,7 @@
 package com.jobhub.repository;
 
 import com.jobhub.entity.Job;
+import com.jobhub.entity.JobApplication;
 import com.jobhub.entity.RecruiterProfile;
 import com.jobhub.enums.EmploymentType;
 import com.jobhub.enums.ExperienceLevel;
@@ -37,4 +38,18 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             JobStatus status,
             ExperienceLevel experienceLevel,
             Pageable pageable);
+
+//    ================= 4 aggregation queries for recruiter dashboard   =================
+
+
+
+    long countByRecruiterProfile(
+            RecruiterProfile recruiterProfile);
+
+    long countByRecruiterProfileAndStatus(
+            RecruiterProfile recruiterProfile,
+            JobStatus status);
+
+
+
 }
